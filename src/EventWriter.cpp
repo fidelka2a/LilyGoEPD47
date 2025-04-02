@@ -5,6 +5,9 @@
 #include "firasans.h"
 #include <cstring>
 
+
+int EventWriter::counter = 0;
+
 EventWriter::EventWriter(int32_t x, int32_t y, int32_t x_lim)
 {
     // Initialize members or process the parameters as needed
@@ -15,6 +18,12 @@ EventWriter::EventWriter(int32_t x, int32_t y, int32_t x_lim)
     this->y = y;
     this->x_lim = x_lim;
 
+
+    
+    std::cout << "EventWriter counter: "<< counter++ << std::endl;
+
+
+    
     // this->framebuffer = (uint8_t *)ps_calloc(sizeof(uint8_t), EPD_WIDTH * EPD_HEIGHT / 2);
     // if (!this->framebuffer) {
     //     Serial.println("alloc memory failed !!!");
@@ -26,6 +35,9 @@ EventWriter::EventWriter(int32_t x, int32_t y, int32_t x_lim)
 
 void EventWriter::writeText(const std::string& text) 
 {
+    //kontrola counteru
+    // std::cout << "POCET INSTANCI eventwritteru: " << this->counter << std::endl;
+
     const int maxCharsPerLine = 17;
     std::vector<const char*> chunks = splitText(text, maxCharsPerLine);
     std::cout << "x: " << this->x << " y: "<< this->y << " vektor size: " << chunks.size() <<std::endl;

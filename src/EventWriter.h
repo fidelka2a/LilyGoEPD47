@@ -15,6 +15,8 @@ class EventWriter
     void writeText(const std::string& text); 
 
     private:
+
+        static int counter;
         uint8_t *framebuffer = NULL;
         std::vector<const char*> splitText(const std::string& text, int chunkSize) const;
 };
