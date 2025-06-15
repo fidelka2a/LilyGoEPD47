@@ -10,8 +10,9 @@ class EventWriter
     public:
     //position of cursor
     int32_t x, y, x_lim;
+    
 
-    EventWriter(int32_t x,int32_t y,int32_t x_lim);
+    EventWriter(int32_t x,int32_t y,int32_t x_lim,uint8_t* framebuffer);
     void writeText(const std::string& text); 
 
     private:

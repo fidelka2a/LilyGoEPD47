@@ -5,8 +5,9 @@
 #include <vector>
 #include <ArduinoJson.h>
 #include "EventWriter.h"
+#include "Drawable.h"
 
-class Calendar {
+class Calendar: public Drawable {
 public:
     // Struct to hold calendar event details
     // lic id: string,
@@ -32,13 +33,16 @@ public:
     };
 
     // Constructor and Destructor
-    Calendar();
+    Calendar(uint8_t* framebuffer);
+    Calendar() = default;
     ~Calendar();
+
+    
 
     // Method to add a calendar event
     void addEvent(const std::string& id,const std::string& name, const std::string& date, const std::string& time, const std::string& location);
 
-    
+    void draw(uint8_t* framebuffer) override;
 
      
      bool addEventsFromJsonArray(const std::string& jsonArray);
@@ -48,6 +52,7 @@ public:
 private:
     std::vector<Event> events; // A collection of events
     EventWriter* eventWriter;
+    uint8_t* framebuffer = nullptr;
     bool parseJsonEvent(const JsonObject& obj, Event& event);    
 };
 

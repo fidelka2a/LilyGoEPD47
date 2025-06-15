@@ -8,7 +8,7 @@
 
 int EventWriter::counter = 0;
 
-EventWriter::EventWriter(int32_t x, int32_t y, int32_t x_lim)
+EventWriter::EventWriter(int32_t x, int32_t y, int32_t x_lim,uint8_t* framebuffer)
 {
     // Initialize members or process the parameters as needed
     // Here we assume they are just placeholders since no member variables are defined in the header
@@ -17,6 +17,7 @@ EventWriter::EventWriter(int32_t x, int32_t y, int32_t x_lim)
     this->x = x;
     this->y = y;
     this->x_lim = x_lim;
+    this->framebuffer = framebuffer;
 
 
     
@@ -35,8 +36,11 @@ EventWriter::EventWriter(int32_t x, int32_t y, int32_t x_lim)
 
 void EventWriter::writeText(const std::string& text) 
 {
+
+
     //kontrola counteru
-    // std::cout << "POCET INSTANCI eventwritteru: " << this->counter << std::endl;
+    std::cout << "writeText call" <<std::endl;
+    std::cout << "POCET INSTANCI eventwritteru: " << this->counter << std::endl;
 
     const int maxCharsPerLine = 17;
     std::vector<const char*> chunks = splitText(text, maxCharsPerLine);
@@ -44,7 +48,7 @@ void EventWriter::writeText(const std::string& text)
 
 
     for (const char* chunk : chunks) {
-        writeln((GFXfont *)&FiraSans, chunk, &this->x, &this->y, NULL); 
+        writeln((GFXfont *)&FiraSans, chunk, &this->x, &this->y, this->framebuffer); 
         delay(200);       
         this->x = 10;
         this->y += 50;

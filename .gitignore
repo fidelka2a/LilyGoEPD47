@@ -5,3 +5,5 @@
 .vscode/ipch
 
 .codegpt
+.vscode
+/lib

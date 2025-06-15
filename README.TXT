@@ -10,3 +10,8 @@ spustit  tento command
 hardwarove to lze udelat 
 
 co posilat do seruialu pro debug
+
+
+tlacitkovy restart bitloaderu
+1. prvni reset button pak prostredni 
+2. pustit reset pak prostrdni button

@@ -29,18 +29,24 @@
 
 #include "arduino_secrets.h"
 
+
+#ifndef BOARD_HAS_PSRAM
+#error "Please enable PSRAM, Arduino IDE -> tools -> PSRAM -> OPI !!!"
+#endif
+
 int incomingByte = 0;
 
 WiFiMulti WiFiMulti;
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
 
+
 const char broker[] = "192.168.1.22";
 int        port     = 1883;
 const char topic[]  = "test/topic";
 
-Calendar calendar;
-
+uint8_t* framebuffer = nullptr;
+Calendar* calendar;
 
 void onMqttMessage(int messageSize) {
   // we received a message, print out the topic and contents
@@ -69,7 +75,7 @@ void onMqttMessage(int messageSize) {
 //   }
 
 
-   if (calendar.addEventsFromJsonArray((char*)buffer)) {
+   if (calendar->addEventsFromJsonArray((char*)buffer)) {
      Serial.println("Events added successfully from MQTT message.");
    } else {
      Serial.println("Failed to parse events from MQTT message.");
@@ -82,49 +88,42 @@ void onMqttMessage(int messageSize) {
 
 void setup()
 {
-    Serial.begin(115200);
-    while(!Serial);
-      Serial.println("Test");
-    // inicializace T5
-    epd_init();
-
+  Serial.begin(115200);
+  while(!Serial);
+    Serial.println("Test");
 
   WiFiMulti.addAP(SECRET_SSID, SECRET_PASS);
 
-  while (WiFiMulti.run() != WL_CONNECTED) {
-    // failed, retry
-    Serial.print(".");
-    delay(5000);
+    while (WiFiMulti.run() != WL_CONNECTED) {
+      // failed, retry
+      Serial.print(".");
+      delay(5000);
+    }
+    
+    if (!mqttClient.connect(broker, port)) 
+    {
+      Serial.print("MQTT connection failed! Error code = ");
+      Serial.println(mqttClient.connectError());
+    
+  while (1);
   }
-
-  if (!mqttClient.connect(broker, port)) {
-    Serial.print("MQTT connection failed! Error code = ");
-    Serial.println(mqttClient.connectError());
-
-    while (1);
-  }
-
+    
   mqttClient.onMessage(onMqttMessage);
   mqttClient.subscribe(topic);
 
+      // inicializace T5
 
-    // Rect_t area1 = {
-    //     .x = 30,
-    //     .y = 10,
-    //     .width = pic1_width,
-    //     .height =  pic1_height
-    // };
 
     // Zapnuti T5
-     epd_poweron();
+    //  epd_poweron();
 
     // Smazani T5
-     epd_clear();
+    //  epd_clear();
 
     // Vykresleni loga
     // epd_draw_grayscale_image(area1, (uint8_t *) pic1_data);
     //  delay(200);
-    // // //epd_poweroff();
+    // //epd_poweroff();
 
     
     // int32_t cursor_x = 30;
@@ -150,28 +149,31 @@ void setup()
      int  y_r = 30;
      cursor_x2 = 0;
 
-    for (int i = 30; i < 431;i = i + 40)    
-    {
+     //init display
+     epd_init();
 
-        FontProperties fontProp = {
-        .fg_color = barva,
-        .bg_color = 15,
-        .fallback_glyph = 0,
-        .flags = 0
-        };
+    // for (int i = 30; i < 431;i = i + 40)    
+    // {
+
+    //     FontProperties fontProp = {
+    //     .fg_color = barva,
+    //     .bg_color = 15,
+    //     .fallback_glyph = 0,
+    //     .flags = 0
+    //     };
 
     
-    y_r += i;
-    cursor_x2 = 0;
+      // y_r += i;
+      // cursor_x2 = 0;
 
-    sprintf(text, "Maslo %d", barva);
+      // sprintf(text, "Maslo %d", barva);
 
-    write_mode((GFXfont *)&FiraSans, text, &cursor_x2, &y_r, NULL, BLACK_ON_WHITE, &fontProp);
-    delay(200);
+      // write_mode((GFXfont *)&FiraSans, text, &cursor_x2, &y_r, NULL, BLACK_ON_WHITE, &fontProp);
+      // delay(200);
 
-    barva = barva +4;
+      // barva = barva +4;
     
-    }
+    // }
 
     
     // cursor_x = 30;
@@ -185,10 +187,15 @@ void setup()
     // char *string3 = "➸ Renda rules!!";
     // // Vykresleni treti vety
     // writeln((GFXfont *)&FiraSans, string3, &cursor_x, &cursor_y, NULL);
+    Serial.println("Test setup");
      delay(200);
 
     // Vypnuti T5
-     epd_poweroff();    
+    //  epd_poweroff();    
+    framebuffer = (uint8_t *)heap_caps_malloc(EPD_WIDTH * EPD_HEIGHT / 2, MALLOC_CAP_SPIRAM);
+    memset(framebuffer, 0xFF, EPD_WIDTH * EPD_HEIGHT / 2);    
+
+    calendar = new Calendar(framebuffer);
 }
 
 void loop()
@@ -203,12 +210,13 @@ void loop()
     Serial.print("I received: ");
     Serial.println(incomingMessage);
 
-    if (calendar.addEventsFromJsonArray(incomingMessage.c_str())) {
-     Serial.println("Events added successfully from MQTT message.");
-     calendar.displayEvents();
-   } else {
-     Serial.println("Failed to parse events from MQTT message.");
-   }
+    // if (calendar->addEventsFromJsonArray(incomingMessage.c_str())) {
+    //      Serial.println("Events added successfully from MQTT message.");
+    //      calendar->displayEvents();
+    //    } else {
+    //      Serial.println("Failed to parse events from MQTT message.");
+    //    }
+       
    
     // epd_poweron();
 
@@ -222,7 +230,7 @@ void loop()
     // epd_poweroff();   
   }
 
-  //  Serial.println("zapno, bude to good.2");
+  //  Serial.println("zapno, bude to good.2");  
    delay(1000);
 }
 
