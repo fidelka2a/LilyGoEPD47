@@ -79,3 +79,6 @@ std::vector<const char*> EventWriter::splitText(const std::string& text, int chu
 
     return chunks;
 }
+
+
+

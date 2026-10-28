@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"Get-WMIObject Win32_SerialPort | Select-Object DeviceID, Name\")",
+      "Bash(ipconfig)",
+      "Bash(findstr /i \"IPv4\")",
+      "Bash(\"C:/Users/rendy/.platformio/packages/toolchain-xtensa-esp-elf/bin/xtensa-esp32s3-elf-addr2line.exe\" -fe \"C:/Users/rendy/Documents/PlatformIO/Projects/241011-074530-lilygo-t-display-s3/.pio/build/lilygo-t-display-s3/firmware.elf\" 0x42014a39 0x42014a64 0x42014bb8 0x4200d589 0x4200dac6 0x4200e2fe 0x42002c06 0x4200f43a 0x4200f4ff 0x42013326 0x4202096a)",
+      "Bash(\"C:/Users/rendy/.platformio/packages/toolchain-xtensa-esp-elf/bin/xtensa-esp32s3-elf-addr2line.exe\" -fe \"C:/Users/rendy/Documents/PlatformIO/Projects/241011-074530-lilygo-t-display-s3/.pio/build/lilygo-t-display-s3/firmware.elf\" 0x42014a01 0x42014a2c 0x42014b80 0x4200d58d 0x4200d5a5 0x4200db0e 0x4200e9c1 0x42002c0a 0x4200f402 0x4200f4c7 0x420132ee 0x42020932)"
+    ]
+  }
+}

@@ -52,8 +52,9 @@ public:
 private:
     std::vector<Event> events; // A collection of events
     EventWriter* eventWriter;
-    uint8_t* framebuffer = nullptr;
-    bool parseJsonEvent(const JsonObject& obj, Event& event);    
+    uint8_t* framebuffer = nullptr;    
+    void DrawFrame(int rowCount, int columnCount);
+    bool parseJsonEvent(const JsonObject &obj, Event &event);
 };
 
 #endif // CALENDAR_H

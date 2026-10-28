@@ -73,6 +73,13 @@ void Calendar::displayEvents() const {
     epd_poweroff();    
 }
 
+
+// 7 radek + 1 radek s legendou (bodovy cas[ datum, datum&cas ], interval [datun] )
+void Calendar::DrawFrame(int rowCount, int columnCount)
+{
+
+}
+
 bool Calendar::parseJsonEvent(const JsonObject& obj, Event& event) {
     // Extract values from the JSON object
     event.id = obj["id"] | "";

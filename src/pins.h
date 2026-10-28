@@ -4,7 +4,7 @@
 #if defined(CONFIG_IDF_TARGET_ESP32)
 #define T5_47
 #elif defined(CONFIG_IDF_TARGET_ESP32S3)
-//#define T5_47_PLUS
+#define T5_47_PLUS
 #else
 #error "Unsupported board"
 #endif

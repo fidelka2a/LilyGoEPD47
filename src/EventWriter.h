@@ -14,6 +14,7 @@ class EventWriter
 
     EventWriter(int32_t x,int32_t y,int32_t x_lim,uint8_t* framebuffer);
     void writeText(const std::string& text); 
+    
 
     private:
 
